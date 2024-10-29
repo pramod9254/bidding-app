@@ -338,15 +338,8 @@ class BidsList2Controller:
             If student is exceeding the limit an error message will appear else the student will be redirected to
             ChooseBidView.
         """
-
-        if len(self.user.get_ongoing_contracts()) + len(self.bids) >= 5:
-            messagebox.showerror("showerror", "The number of contracts and bids exceed the limit. "
-                                 + str(len(self.user.get_ongoing_contracts())) + " contracts and " + str(len(self.bids))
-                                 + " bids.")
-        else:
-            view.root.destroy()
-            # ChooseBidController(self.user)
-            CreateBidController2(self.user, 'open')
+        view.root.destroy()
+        CreateBidController2(self.user, 'open')
 
     def show_bid_btn(self, view, bid):
         """
@@ -559,16 +552,9 @@ class CreateBidController2:
     """
 
     def __init__(self, user, type_bid):
-        print('CreateBidView2------', type_bid)
         self.user = user
         self.type_bid = type_bid
-        # checking what type the bid to be created is
-        if self.type_bid == 'open':
-            # CreateBidView(self, 'Open')
-            CreateBidView2(self, user, 'Open')
-        else:
-            # CreateBidView(self, 'Close')
-            CreateBidView2(self, 'Close')
+        CreateBidView2(self, user, 'Open')
 
     def submit_form(self, item_name, item_descption, quantity, amount, user_id, selected_date, view):
         """
@@ -583,8 +569,6 @@ class CreateBidController2:
             BidListView page
         """
         # validate name, quantity, amount should not be null
-
-        print('selected_date------', selected_date)
 
        
         if item_name == '' or item_descption == '' or quantity == '' or amount == '':
