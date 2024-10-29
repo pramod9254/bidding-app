@@ -90,7 +90,7 @@ class LoginView(Page):
         self.username_label.place(x=240, y=250)
 
         # Making the username textbox
-        self.username = Entry(font=("Arial", 14))
+        self.username = Entry(font=("Arial", 14), width=25)
         self.username.place(x=360, y=250)
 
         # Making the password label
@@ -98,12 +98,12 @@ class LoginView(Page):
         self.password_label.place(x=240, y=300)
 
         # Making the password textbox
-        self.password = Entry(show="*", font=("Arial", 14))
+        self.password = Entry(show="*", font=("Arial", 14), width=25)
         self.password.place(x=360, y=300)
 
         # Making the button
 
-        self.myButton = Button(text="New Log in",
+        self.myButton = Button(text="Log in",
                                command=lambda: self.controller.login_btn2(self.username.get(), self.password.get(),
                                                                          self), bg='#5c3f8f', font=("Arial", 14),
                                fg='black')
@@ -111,18 +111,10 @@ class LoginView(Page):
         self.myButton.place(x=370, y=360)
 
 
-        self.myButton = Button(text="Log in",
-                               command=lambda: self.controller.login_btn(self.username.get(), self.password.get(),
-                                                                         self), bg='#5c3f8f', font=("Arial", 14),
-                               fg='black')
-        
-
-        self.myButton.place(x=600, y=360)
-
         self.myButton = Button(text="Sign up",
                                command=lambda: self.controller.signup_btn(self), bg='#5c3f8f', font=("Arial", 14),
                                fg='black')
-        self.myButton.place(x=500, y=360)
+        self.myButton.place(x=480, y=360)
 
         
         self.root.mainloop()
@@ -144,49 +136,49 @@ class SignUpView(Page):
         self.name_label = Label(text="Name:", font=("Arial", 14), background="#dea5a4")
         self.name_label.place(x=x, y=y)
 
-        x+=120
+        x+=130
         # Making the name textbox
         self.name = Entry(font=("Arial", 14))
         self.name.place(x=x, y=y)
 
-        x-=120
+        x-=130
         y+=50
         # Making the username label
         self.username_label = Label(text="Username:", font=("Arial", 14), background="#dea5a4")
         self.username_label.place(x=x, y=y)
         
 
-        x+=120
+        x+=130
         # Making the username textbox
         self.username = Entry(font=("Arial", 14))
         self.username.place(x=x, y=y)
 
 
-        x-=120
+        x-=130
         y+=50
         # Making the password label
         self.password_label = Label(text="Password:", font=("Arial", 14), background="#dea5a4")
         self.password_label.place(x=x, y=y)
 
-        x+=120
+        x+=130
         # Making the password textbox
         self.password = Entry(show="*", font=("Arial", 14))
         self.password.place(x=x, y=y)
 
 
-        x-=120
+        x-=130
         y+=50
         # Making the confirm password label
         self.confirm_password_label = Label(text="Confirm Password:", font=("Arial", 14), background="#dea5a4")
         self.confirm_password_label.place(x=x, y=y)
 
-        x+=120
+        x+=130
         # Making the confirm password textbox
         self.confirm_password = Entry(show="*", font=("Arial", 14))
         self.confirm_password.place(x=x, y=y)
 
         
-        x-=120
+        x-=130
         y+=50
         # Making the user type label
         self.is_seller_label = Label(text="Is Seller?:", font=("Arial", 14), background="#dea5a4")
@@ -194,13 +186,13 @@ class SignUpView(Page):
     
 
         self.is_seller = BooleanVar()
-        self.is_seller_yes = Radiobutton(self.root, text='Yes', variable=self.is_seller, value=True)
-        
-        x+=90
+        x+=130
+        self.is_seller_yes = Radiobutton(self.root, text='Yes', variable=self.is_seller, value=True,)
         self.is_seller_yes.place(x=x, y=y)
-        self.is_seller_no = Radiobutton(self.root, text='No', variable=self.is_seller, value=False)
 
-        x+=90
+        x+=100
+        self.is_seller_no = Radiobutton(self.root, text='No', variable=self.is_seller, value=False)
+        
         self.is_seller_no.place(x=x, y=y)
 
         
@@ -539,97 +531,103 @@ class CreateBidView2(Page):
 class BidsList2View(ScrollablePage):
     def __init__(self, controller, bids, user):
         super().__init__(controller)
-        
-        self.label = Label(self.scroll.frame, text="Available Bids", fg='#5c3f8f', bg='#f244aa', font=("Arial", 25),
+
+        header_frame = Frame(self.scroll.frame, bg='#dea5a4')
+        header_frame.grid(row=0, column=0, columnspan=10, padx=(10, 10), pady=(10, 10), sticky="ew")
+
+        # Add Back button in the header frame
+        self.back_button = Button(header_frame, text="Back", bg='#aec6cf', font=("Arial", 14), fg='black',
+                                width=10,
+                                command=lambda: self.controller.back_btn(self))
+        self.back_button.grid(row=0, column=0, padx=5, sticky="w")
+
+        # Add Available Bids label in the header frame
+        self.label = Label(header_frame, text="Available Bids", fg='#5c3f8f', bg='#f244aa', font=("Arial", 25),
                                justify=CENTER,
-                               background="#dea5a4").grid(row=0, column=2, pady=20, padx=3, sticky="W")
-        
-        self.back_button = Button(self.scroll.frame, text="Back", bg='#aec6cf', font=("Arial", 14), fg='black',
-                                  width="20",
-                                  command=lambda: self.controller.back_btn(self)).grid(row=0, column=1, sticky="W",
-                                                                                       pady=20, padx=3)
+                               background="#dea5a4").grid(row=0, column=2, pady=20, padx=53, sticky="W")
+
+        # Add Create New Bid button only if the user is a seller
+        if user.get_is_seller() == 'Seller':
+            self.bid_button = Button(header_frame, text="Create New Bid", bg='#f244aa', font=("Arial", 14), fg='black',
+                                    command=lambda: self.controller.create_bid_btn(self))
+            self.bid_button.grid(row=0, column=4, padx=5, sticky="e")
+
         self.bids = bids
 
         total_rows = len(self.bids)
-        row = 3
+        row = 4
+
+        header_frame2 = Frame(self.scroll.frame, bg='red')
+        header_frame2.grid(row=row, column=0, columnspan=10, padx=(10, 10),pady=(10, 10), sticky="ew")
 
         column = 0
-        Label(self.scroll.frame, text='Sr no', relief=RIDGE,  width=5, justify=LEFT).grid(row= row, column=column, sticky=NSEW)
+        Label(header_frame2, text='Sr no', relief=RIDGE, width=5, background='grey', fg='white', justify=LEFT).grid(row= row, column=column, sticky=NSEW)
         
         column = column + 1
-        Label(self.scroll.frame, text='Product', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(header_frame2, text='Product', relief=RIDGE, background='grey', fg='white',  width=25, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         
         column = column + 1
-        Label(self.scroll.frame, text='Seller', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column = column, sticky=NSEW)
+        Label(header_frame2, text='Seller', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column = column, sticky=NSEW)
         
         column = column + 1
-        Label(self.scroll.frame, text='Quantity', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(header_frame2, text='Quantity', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         
         column = column + 1
-        Label(self.scroll.frame, text='Created On', relief=RIDGE,  width=15, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(header_frame2, text='Created On', relief=RIDGE, background='grey', fg='white',  width=15, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         
         column = column + 1
-        Label(self.scroll.frame, text='Bid Close Date', relief=RIDGE,  width=15, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(header_frame2, text='Bid Close Date', relief=RIDGE, background='grey', fg='white',  width=15, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         
         column = column + 1
-        Label(self.scroll.frame, text='Status', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(header_frame2, text='Status', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         
         if user.get_is_seller() == 'Buyer':
             column = column + 1
-            Label(self.scroll.frame, text='Accept', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+            Label(header_frame2, text='Accept', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
 
         column = column + 1
-        Label(self.scroll.frame, text='Description', relief=RIDGE,  width=40, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(header_frame2, text='Description', relief=RIDGE, background='grey', fg='white',  width=30, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         
         
-        row = 4
+        row = 5
         for i in range(total_rows):
             column = 0
-            Label(self.scroll.frame, text=i+1, relief=RIDGE,  width=5, justify=LEFT).grid(row= row+i, column=column, sticky=NSEW)
+            Label(header_frame2, text=i+1, relief=RIDGE,  width=5, justify=LEFT).grid(row= row+i, column=column, sticky=NSEW)
             
             column = column + 1
-            Label(self.scroll.frame, text=bids[i]['item'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            Label(header_frame2, text=bids[i]['item'], relief=RIDGE,  width=25, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
             
             column = column + 1
-            Label(self.scroll.frame, text=bids[i]['seller'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column = column, sticky=NSEW)
+            Label(header_frame2, text=bids[i]['seller'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column = column, sticky=NSEW)
             
             column = column + 1
-            Label(self.scroll.frame, text=bids[i]['quantity'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            Label(header_frame2, text=bids[i]['quantity'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
             
             column = column + 1
             date_created = ''
             if bids[i]['date_created'] is not None:
                 date_created = bids[i]['date_created'].strftime("%B %d, %Y")
 
-            Label(self.scroll.frame, text=date_created, relief=RIDGE,  width=15, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            Label(header_frame2, text=date_created, relief=RIDGE,  width=15, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
             
             column = column + 1
             close_date = ''
             if bids[i]['date_closed'] is not None:
                 close_date = bids[i]['date_closed'].strftime("%B %d, %Y")
-            Label(self.scroll.frame, text=close_date, relief=RIDGE,  width=15, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            Label(header_frame2, text=close_date, relief=RIDGE,  width=15, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
             
             column = column + 1
-            Label(self.scroll.frame, text=bids[i]['status'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            Label(header_frame2, text=bids[i]['status'], relief=RIDGE,  width=10, justify=LEFT, fg='green').grid(row = row+i, column= column, sticky=NSEW)
             
             if user.get_is_seller() == 'Buyer':
                 column = column + 1
-                Button(self.scroll.frame, text="Accept", bg='#aec6cf', font=("Arial", 14), fg='green',
+                Button(header_frame2, text="Accept", bg='#aec6cf', font=("Arial", 14), fg='green',
                                   command=lambda selected_bid=bids[i]: self.controller.approve_bid_btn(self, selected_bid)).grid(row=row+i, column=column, sticky=NSEW)
        
             column = column + 1
-            Label(self.scroll.frame, text=bids[i]['description'], relief=RIDGE,  width=40, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            Label(header_frame2, text=bids[i]['description'], relief=RIDGE,  width=30, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
             
 
-        if user.get_is_seller() == 'Seller':
-            row = row + total_rows
-
-            self.bid_button = Button(self.scroll.frame, text="Create New Bid", bg='#f244aa', font=("Arial", 14),
-                                     fg='black', width="20",
-                                     command=lambda: self.controller.create_bid_btn(self)).grid(row=row + 2, column=1,
-                                                                                                sticky="E", pady=10,
-                                                                                                padx=10)
-        
         self.root.mainloop()
 
 class BuyerBidsListView(ScrollablePage):
@@ -1172,7 +1170,7 @@ class BidInfoView(Page):
         # Type label
         y = 95
         self.type_label = Label(text="Type: ", font=("Arial", 14), background="#dea5a4")
-        self.type_label.place(x=120, y=y)
+        self.type_label.place(x=130, y=y)
 
         # Making the type display
         if isinstance(self.bid, OpenBid):
@@ -1860,17 +1858,20 @@ class ContractsList2View(ScrollablePage):
         super().__init__(controller)
         self.contracts = contracts
         
-        self.label = Label(self.scroll.canvas, text="Contracts", fg='#5c3f8f', bg='#f244aa', width='12',
-                           font=("Arial", 25),
-                           justify=CENTER,
-                           background="#dea5a4").grid(row=0, column=0, pady=30, padx=500, sticky="E")
+        header_frame = Frame(self.scroll.frame, bg='#dea5a4')
+        header_frame.grid(row=0, column=0, columnspan=10, padx=(10, 10), pady=(10, 10), sticky="ew")
 
-        # Creating back button
-        self.back_button = Button(self.scroll.frame, text="Back", bg='#aec6cf', font=("Arial", 14), fg='black',
-                                  width="5", command=lambda: self.controller.back_btn(self)).grid(row=0, column=0,
-                                                                                                   sticky="E", pady=30,
-                                                                                                   padx=2)
+        # Add Back button in the header frame
+        self.back_button = Button(header_frame, text="Back", bg='#aec6cf', font=("Arial", 14), fg='black',
+                                width=10,
+                                command=lambda: self.controller.back_btn(self))
+        self.back_button.grid(row=0, column=0, padx=5, sticky="w")
 
+        # Add Available Bids label in the header frame
+        self.label = Label(header_frame, text="Contracts", fg='#5c3f8f', bg='#f244aa', font=("Arial", 25),
+                               justify=CENTER,
+                               background="#dea5a4").grid(row=0, column=2, pady=20, padx=300, sticky="W")
+        
         self.show_contracts(self.contracts)
 
     def show_contracts(self, contracts):
@@ -1880,25 +1881,25 @@ class ContractsList2View(ScrollablePage):
         total_rows = len(self.contracts)
         row = 3
         column = 2
-        Label(self.scroll.frame, text='Sr no', relief=RIDGE,  width=5, justify=LEFT).grid(row= row, column=column, sticky=NSEW)
+        Label(self.scroll.frame, text='Sr no', relief=RIDGE, background='grey', fg='white',  width=5, justify=LEFT).grid(row= row, column=column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Seller', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column = column, sticky=NSEW)
+        Label(self.scroll.frame, text='Seller', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column = column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Buyer', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Buyer', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Product', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Product', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Description', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Description', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Quantity', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Quantity', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Amount', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Amount', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Created On', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Created On', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Signed On', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Signed On', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         column = column + 1
-        Label(self.scroll.frame, text='Status', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Status', relief=RIDGE, background='grey', fg='white',  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         
         row = 4
         for i in range(total_rows):
@@ -1921,7 +1922,7 @@ class ContractsList2View(ScrollablePage):
             column = column + 1
             Label(self.scroll.frame, text=contracts[i]['date_signed'].strftime("%B %d, %Y"), relief=RIDGE,  width=15, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
             column = column + 1
-            Label(self.scroll.frame, text=contracts[i]['contract_status'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            Label(self.scroll.frame, text=contracts[i]['contract_status'], relief=RIDGE,  width=10,  fg='green', justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
             
 
         self.root.mainloop()
