@@ -539,38 +539,38 @@ class CreateBidView2(Page):
 class BidsList2View(ScrollablePage):
     def __init__(self, controller, bids, user):
         super().__init__(controller)
-        if len(bids) == 0:
-            column = 3
-        else:
-            column = 1
         
         self.label = Label(self.scroll.frame, text="Available Bids", fg='#5c3f8f', bg='#f244aa', font=("Arial", 25),
                                justify=CENTER,
-                               background="#dea5a4").grid(row=0, column=3, pady=20, padx=3)
+                               background="#dea5a4").grid(row=0, column=2, pady=20, padx=3, sticky="W")
         
-        # Creating back button
         self.back_button = Button(self.scroll.frame, text="Back", bg='#aec6cf', font=("Arial", 14), fg='black',
                                   width="20",
                                   command=lambda: self.controller.back_btn(self)).grid(row=0, column=1, sticky="W",
                                                                                        pady=20, padx=3)
-        # Bids list
         self.bids = bids
 
-        # columns in list
         total_rows = len(self.bids)
         row = 3
+
         column = 0
         Label(self.scroll.frame, text='Sr no', relief=RIDGE,  width=5, justify=LEFT).grid(row= row, column=column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Seller', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column = column, sticky=NSEW)
+        
         column = column + 1
         Label(self.scroll.frame, text='Product', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        
         column = column + 1
-        Label(self.scroll.frame, text='Description', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Seller', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column = column, sticky=NSEW)
+        
         column = column + 1
         Label(self.scroll.frame, text='Quantity', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        
         column = column + 1
-        Label(self.scroll.frame, text='Created On', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        Label(self.scroll.frame, text='Created On', relief=RIDGE,  width=15, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        
+        column = column + 1
+        Label(self.scroll.frame, text='Bid Close Date', relief=RIDGE,  width=15, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        
         column = column + 1
         Label(self.scroll.frame, text='Status', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
         
@@ -578,21 +578,37 @@ class BidsList2View(ScrollablePage):
             column = column + 1
             Label(self.scroll.frame, text='Accept', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
 
+        column = column + 1
+        Label(self.scroll.frame, text='Description', relief=RIDGE,  width=40, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
+        
+        
         row = 4
         for i in range(total_rows):
             column = 0
             Label(self.scroll.frame, text=i+1, relief=RIDGE,  width=5, justify=LEFT).grid(row= row+i, column=column, sticky=NSEW)
-            column = column + 1
-            # Label(self.scroll.frame, text=bids[i][0], relief=RIDGE,  width=5, justify=LEFT).grid(row = row+i, column=1, sticky=NSEW)
-            Label(self.scroll.frame, text=bids[i]['seller'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column = column, sticky=NSEW)
+            
             column = column + 1
             Label(self.scroll.frame, text=bids[i]['item'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            
             column = column + 1
-            Label(self.scroll.frame, text=bids[i]['description'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            Label(self.scroll.frame, text=bids[i]['seller'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column = column, sticky=NSEW)
+            
             column = column + 1
             Label(self.scroll.frame, text=bids[i]['quantity'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            
             column = column + 1
-            Label(self.scroll.frame, text=bids[i]['date_created'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            date_created = ''
+            if bids[i]['date_created'] is not None:
+                date_created = bids[i]['date_created'].strftime("%B %d, %Y")
+
+            Label(self.scroll.frame, text=date_created, relief=RIDGE,  width=15, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            
+            column = column + 1
+            close_date = ''
+            if bids[i]['date_closed'] is not None:
+                close_date = bids[i]['date_closed'].strftime("%B %d, %Y")
+            Label(self.scroll.frame, text=close_date, relief=RIDGE,  width=15, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            
             column = column + 1
             Label(self.scroll.frame, text=bids[i]['status'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
             
@@ -601,7 +617,9 @@ class BidsList2View(ScrollablePage):
                 Button(self.scroll.frame, text="Accept", bg='#aec6cf', font=("Arial", 14), fg='green',
                                   command=lambda selected_bid=bids[i]: self.controller.approve_bid_btn(self, selected_bid)).grid(row=row+i, column=column, sticky=NSEW)
        
-        # printing buttons for each bid on the screen
+            column = column + 1
+            Label(self.scroll.frame, text=bids[i]['description'], relief=RIDGE,  width=40, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
+            
 
         if user.get_is_seller() == 'Seller':
             row = row + total_rows
@@ -612,8 +630,6 @@ class BidsList2View(ScrollablePage):
                                                                                                 sticky="E", pady=10,
                                                                                                 padx=10)
         
-        row = 0
-
         self.root.mainloop()
 
 class BuyerBidsListView(ScrollablePage):
@@ -624,63 +640,7 @@ class BuyerBidsListView(ScrollablePage):
         else:
             column = 1
         
-        self.label = Label(self.scroll.frame, text="All Available Bids", fg='#5c3f8f', bg='#f244aa', font=("Arial", 25),
-                               justify=CENTER,
-                               background="#dea5a4").grid(row=0, column=3, pady=20, padx=3)
         
-        # Creating back button
-        self.back_button = Button(self.scroll.frame, text="Back", bg='#aec6cf', font=("Arial", 14), fg='black',
-                                  width="20",
-                                  command=lambda: self.controller.back_btn(self)).grid(row=0, column=1, sticky="W",
-                                                                                       pady=20, padx=3)
-        # Bids list
-        self.bids = bids
-
-        # columns in list
-        total_rows = len(self.bids)
-        # total_columns = len(lst[0])
-        print('bids---',bids)
-        row = 3
-        column = 0
-        Label(self.scroll.frame, text='Sr No.', relief=RIDGE,  width=5, justify=LEFT).grid(row= row, column=column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Created By', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column = column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Prodcut', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Description', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Quantity', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Amount', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Created on', relief=RIDGE,  width=20, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Status', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
-        column = column + 1
-        Label(self.scroll.frame, text='Approve', relief=RIDGE,  width=10, justify=LEFT).grid(row = row, column= column, sticky=NSEW)
-        row = 4
-        for i in range(total_rows):
-            column = 0
-            Label(self.scroll.frame, text=i+1, relief=RIDGE,  width=5, justify=LEFT).grid(row= row+i, column=column, sticky=NSEW)
-            column = column + 1
-            Label(self.scroll.frame, text=bids[i]['seller'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column = column, sticky=NSEW)
-            column = column + 1
-            Label(self.scroll.frame, text=bids[i]['item'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
-            column = column + 1
-            Label(self.scroll.frame, text=bids[i]['description'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
-            column = column + 1
-            Label(self.scroll.frame, text=bids[i]['quantity'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
-            column = column + 1
-            Label(self.scroll.frame, text=bids[i]['amount'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
-            column = column + 1
-            Label(self.scroll.frame, text=bids[i]['date_created'].strftime("%B %d, %Y"), relief=RIDGE,  width=20, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
-            column = column + 1
-            Label(self.scroll.frame, text=bids[i]['status'], relief=RIDGE,  width=10, justify=LEFT).grid(row = row+i, column= column, sticky=NSEW)
-            column = column + 1
-            Button(self.scroll.frame, text="Approve22", bg='#aec6cf', font=("Arial", 14), fg='green',
-                                  command=lambda: self.controller.action_bid_btn(self, bids[i]['id'])).grid(row=row+i, column=column, sticky=NSEW)
-
         self.root.mainloop()
 
 

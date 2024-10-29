@@ -105,18 +105,18 @@ class DBActions:
         return result
     
     def getMyBids(self, user_id):
-        select_bids_query = f"SELECT bids.id, users.name as seller, initiator, item, description, quantity, amount, date_created, CASE bids.status when 1 then 'Open' when 2 then 'Closed' else bids.status end as status from bids join users on users.id = bids.initiator WHERE initiator = {user_id}"
+        select_bids_query = f"SELECT bids.id, users.name as seller, initiator, item, description, quantity, amount, date_created, date_closed, CASE bids.status when 1 then 'Open' when 2 then 'Closed' else bids.status end as status from bids join users on users.id = bids.initiator WHERE initiator = {user_id}"
         bids = fetch_query(connection, select_bids_query)
         return bids
     
     def getAllBids(self, status):
-        select_bids_query = f"SELECT bids.id, users.name as seller, initiator, item, description, quantity, amount, date_created, CASE bids.status when 1 then 'Open' when 2 then 'Closed' else bids.status end as status from bids join users on users.id = bids.initiator where bids.status = {status}"
+        select_bids_query = f"SELECT bids.id, users.name as seller, initiator, item, description, quantity, amount, date_created, date_closed, CASE bids.status when 1 then 'Open' when 2 then 'Closed' else bids.status end as status from bids join users on users.id = bids.initiator where bids.status = {status}"
         bids = fetch_query(connection, select_bids_query)
         return bids
     
     def createBid(self, bid):
         print('bid---',bid)
-        insert_query = f"INSERT INTO bids (initiator, item, description, quantity, amount, date_created, status) VALUES ( {bid['initiator']}, '{bid['item']}', '{bid['description']}', {bid['quantity']}, {bid['amount']}, '{bid['date_created']}', 1)"
+        insert_query = f"INSERT INTO bids (initiator, item, description, quantity, amount, date_created, date_closed, status) VALUES ( {bid['initiator']}, '{bid['item']}', '{bid['description']}', {bid['quantity']}, {bid['amount']}, '{bid['date_created']}', '{bid['date_closed']}', 1)"
         print('insert_query---',insert_query)
         result = execute_query(connection, insert_query)
         print('result---',result)
