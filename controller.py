@@ -1,9 +1,9 @@
-from view import LoginView, SignUpView, ProfileView1, END, NORMAL, DISABLED, \
+from view import LoginView, SignUpView, ProfileView, END, NORMAL, DISABLED, \
     CreateBidView2, BidsList2View, ContractsList2View
 from tkinter import messagebox
 from datetime import datetime
 from database import DBActions
-from model import User2
+from model import User
 
 class LoginController:
     """```
@@ -35,8 +35,8 @@ class LoginController:
         if len(verified_user):
             login.root.destroy()
             verified_user = verified_user[0]
-            user = User2(verified_user['id'], verified_user['name'], verified_user['username'], verified_user['password'], verified_user['is_seller'])
-            ProfileController2(user, "Login")
+            user = User(verified_user['id'], verified_user['name'], verified_user['username'], verified_user['password'], verified_user['is_seller'])
+            ProfileController(user, "Login")
         else:
             messagebox.showerror("showerror", "This account does not exist. Try again")
 
@@ -79,7 +79,7 @@ class SignupController:
         view.root.destroy()
         LoginController()
 
-class ProfileController2:
+class ProfileController:
     """
      Parameters:
          -user: user who is currently logged in to the system
@@ -102,17 +102,12 @@ class ProfileController2:
 
     def __init__(self, user, initialisation):
         self.user = user
-        # ProfileView(self.user, self, initialisation)
-        ProfileView1(self.user, self, initialisation)
+        ProfileView(self.user, self, initialisation)
 
 
     def bids_list_btn(self, view):
         view.root.destroy()
-        BidsList2Controller(self.user)
-
-    # def buyer_bids_list_btn(self, view):
-    #     view.root.destroy()
-    #     BidsList2Controller(self.user)
+        BidsListController(self.user)
         
 
     def log_out_btn(self, view):
@@ -137,10 +132,10 @@ class ProfileController2:
             Calls the ContractsListController() which will redirect the user to the ContractsListView page
         """
         view.root.destroy()
-        ContractsList2Controller(self.user)
+        ContractsListController(self.user)
 
 
-class BidsList2Controller:
+class BidsListController:
     """
     Attributes:
         -user: user who is currently logged in to the system
@@ -188,7 +183,7 @@ class BidsList2Controller:
             view.root.destroy()
 
             DBActions().updateBidStatus(selected_bid['id'], 2)
-            ProfileController2(self.user, "Back")
+            ProfileController(self.user, "Back")
         else:
             messagebox.showerror("showerror", "Error creating bid, try again")
 
@@ -205,7 +200,7 @@ class BidsList2Controller:
             ChooseBidView.
         """
         view.root.destroy()
-        CreateBidController2(self.user, 'open')
+        CreateBidController(self.user, 'open')
 
 
     def back_btn(self, view):
@@ -217,10 +212,10 @@ class BidsList2Controller:
             Calls the ProfileController which will redirect the user to the ProfileView page
         """
         view.root.destroy()
-        ProfileController2(self.user, "Back")
+        ProfileController(self.user, "Back")
 
 
-class CreateBidController2:
+class CreateBidController:
     """
     Parameters:
         -user: user who is currently logged in to the system
@@ -276,7 +271,7 @@ class CreateBidController2:
         if res:
             print('Bid created successfully')
             view.root.destroy()
-            BidsList2Controller(self.user)
+            BidsListController(self.user)
         else:
             messagebox.showerror("showerror", "Error creating bid, try again")
 
@@ -287,10 +282,10 @@ class CreateBidController2:
             1) destroys CreateBidView
             2) redirects the user to the BidslistView """
         view.root.destroy()
-        BidsList2Controller(self.user)
+        BidsListController(self.user)
 
 
-class ContractsList2Controller:
+class ContractsListController:
     """
     Attributes:
         -user: user who is currently logged in to the system
@@ -323,7 +318,7 @@ class ContractsList2Controller:
         :return: None
         """
         view.root.destroy()
-        ProfileController2(self.user, "Back")
+        ProfileController(self.user, "Back")
 
 
 # start of the app

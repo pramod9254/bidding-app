@@ -226,7 +226,7 @@ class SignUpView(Page):
         self.myButton.place(x=x, y=y-3)
 
         self.root.mainloop()
-class ProfileView1(Page):
+class ProfileView(Page):
     def __init__(self, user, controller, initialisation):
         super().__init__(controller)
 

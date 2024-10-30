@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class User2(ABC):
+class User(ABC):
     def __init__(self, id, name, username: str, password: str, is_seller: bool):
         self.id = id
         self.name = name
