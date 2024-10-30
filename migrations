@@ -1,0 +1,42 @@
+CREATE DATABASE `biddingapp`;
+
+
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `is_seller` tinyint DEFAULT NULL,
+  `dob` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_UNIQUE` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `bids` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `initiator` int DEFAULT NULL,
+  `item` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `quantity` int DEFAULT NULL,
+  `amount` decimal(9,2) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_closed` datetime DEFAULT NULL,
+  `status` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `contracts` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `seller` int DEFAULT NULL,
+  `buyer` int DEFAULT NULL,
+  `bid_id` int DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_signed` datetime DEFAULT NULL,
+  `expiry_date` datetime DEFAULT NULL,
+  `amount` decimal(9,2) DEFAULT NULL,
+  `status` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
